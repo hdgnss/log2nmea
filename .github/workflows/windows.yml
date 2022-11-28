@@ -1,0 +1,58 @@
+name: Windows
+
+on:
+  push:
+    branches: [ master ]
+    tags:
+      - V*
+  pull_request:
+    branches: [ master ]
+
+env:
+  BUILD_TYPE: Release
+  TARGET_NAME: log2nmea
+
+jobs:
+  build:
+    name: Build on Win2019
+    runs-on: windows-2019
+
+    steps:
+    - name: Install
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: 6.2.2
+        arch: win64_msvc2019_64
+        cached: 'false'
+        aqtversion: '==2.0.5'
+    
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure
+      shell: cmd
+      run: cmake -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      shell: cmd
+      run: cmake --build ${{github.workspace}}\build --config ${{env.BUILD_TYPE}}
+        
+    - name: Package
+      shell: pwsh
+      run: |
+        cp -r 3rd/* build
+        windeployqt --no-translations --compiler-runtime build\Release\${env:TARGET_NAME}'.exe'
+        cd build
+        mv Release ${env:TARGET_NAME}
+        py7zr c ${env:TARGET_NAME}'.7z' ${env:TARGET_NAME} 
+        cmd /c copy /b 7zsd_All.sfx + config.txt + ${env:TARGET_NAME}'.7z'  ${env:TARGET_NAME}_setup.exe
+        cd ..
+    - name: Release
+      if: startsWith(github.event.ref, 'refs/tags/')
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/${{ env.TARGET_NAME }}_setup.exe
+        asset_name: ${{ env.TARGET_NAME }}_win_${{ github.ref_name }}.exe
+        tag: ${{ github.ref }}
+        overwrite: true

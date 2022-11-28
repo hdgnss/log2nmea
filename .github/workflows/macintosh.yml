@@ -1,0 +1,56 @@
+name: Macintosh
+
+on:
+  push:
+    branches: [ master ]
+    tags:
+      - V*
+  pull_request:
+    branches: [ master ]
+
+env:
+  BUILD_TYPE: Release
+  TARGET_NAME: log2nmea
+
+jobs:
+  build:
+    name: Build on OSX
+    runs-on: macos-12
+
+    steps:
+    - name: Prepare
+      run: |
+        sudo xcode-select --print-path
+        sudo xcode-select --switch /Library/Developer/CommandLineTools       
+
+    - name: Install
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: 6.2.2
+        cached: 'false'
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }}
+
+    - name: Package
+      run: |
+        cd build
+        macdeployqt ${{ env.TARGET_NAME }}.app -qmldir=. -verbose=1 -dmg
+        cd ..
+        ls -l build
+
+    - name: Release
+      if: startsWith(github.event.ref, 'refs/tags/')
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/${{ env.TARGET_NAME }}.dmg
+        asset_name: ${{ env.TARGET_NAME }}_osx_${{ github.ref_name }}.dmg
+        tag: ${{ github.ref }}
+        overwrite: true
