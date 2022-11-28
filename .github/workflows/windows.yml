@@ -23,7 +23,6 @@ jobs:
       with:
         version: 6.2.2
         arch: win64_msvc2019_64
-        cached: 'false'
         aqtversion: '==2.0.5'
     
     - name: Checkout
