@@ -41,6 +41,7 @@ jobs:
       run: |
         cp -r 3rd/* build
         windeployqt --no-translations --compiler-runtime build\Release\${env:TARGET_NAME}'.exe'
+        cp -r bat/* build/Release
         cd build
         mv Release ${env:TARGET_NAME}
         py7zr c ${env:TARGET_NAME}'.7z' ${env:TARGET_NAME} 

@@ -18,10 +18,10 @@ if (WIN32)
     set(APP_ICONS "${CMAKE_CURRENT_SOURCE_DIR}/resources/log2nmea.rc")
 elseif (APPLE)
     set(MACOSX_BUNDLE_ICON_FILE log2nmea.icns)
-
     set(APP_ICONS "${CMAKE_CURRENT_SOURCE_DIR}/resources/log2nmea.icns")
     set_source_files_properties(${APP_ICONS} PROPERTIES
            MACOSX_PACKAGE_LOCATION "Resources")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 12.0)
 endif()
 
 set(PROJECT_SOURCES
@@ -51,6 +51,7 @@ set_target_properties(log2nmea PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER log2nmea.hdgnss.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE_COPYRIGHT "Copyright 2022, HDGNSS. All Rights Reserved."
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
