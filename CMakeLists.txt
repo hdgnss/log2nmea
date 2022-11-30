@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(log2nmea VERSION 0.1 LANGUAGES CXX)
+project(log2nmea VERSION 0.2 LANGUAGES CXX)
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/config.h.in"
+  "${PROJECT_BINARY_DIR}/config.h"  )
+
+include_directories(${PROJECT_BINARY_BIN})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

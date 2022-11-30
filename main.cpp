@@ -16,6 +16,8 @@
 
 #include "mainwindow.h"
 #include "log2nmea.h"
+#include "config.h"
+
 #include <QDir>
 #include <QList>
 #include <QFileInfo>
@@ -34,8 +36,8 @@ int main(int argc, char *argv[])
         QList<QString> mOutputList;
 
         QCoreApplication app(argc, argv);
-        QCoreApplication::setApplicationName("log2nmea");
-        QCoreApplication::setApplicationVersion("0.1");
+        QCoreApplication::setApplicationName(PROJECT_NAME);
+        QCoreApplication::setApplicationVersion(PROJECT_VER);
 
         mCommandParser.setApplicationDescription("GPS LOG TO NMEA");
         mCommandParser.addHelpOption();

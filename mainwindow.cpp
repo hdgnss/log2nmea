@@ -17,6 +17,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "log2nmea.h"
+#include "config.h"
 
 #include <QDir>
 #include <QFile>
@@ -28,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QString title = QString::fromUtf8(PROJECT_NAME) + " - V" + QString::fromUtf8(PROJECT_VER);
+    setWindowTitle(title.toUpper());
     mLog2Nmea = new Log2Nmea(this);
     connect(mLog2Nmea, SIGNAL(onJobDone(int)), this, SLOT(onJobDone(int)));
 }
