@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(log2nmea VERSION 0.2 LANGUAGES CXX)
+project(log2nmea VERSION 0.3 LANGUAGES CXX)
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/config.h.in"

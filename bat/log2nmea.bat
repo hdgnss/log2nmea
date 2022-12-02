@@ -7,14 +7,8 @@ echo.%str%
 REM Trim Quotes - Remove surrounding quotes via FOR command
 for /f "useback tokens=*" %%a in ('%str%') do set str=%%~a
 
-set Programs="%ProgramFiles%"
-if "%ProgramFiles(x86)%" NEQ "" (
-    set Programs="%ProgramFiles(x86)%"
-)
-REM Trim the double-quotes
-set Programs=%Programs:~1,-1%
 
-SET LOG2NMEAPATH=%Programs%\log2nmea\
+SET LOG2NMEAPATH=%~dp0
 echo.%LOG2NMEAPATH%
 
 

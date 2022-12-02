@@ -38,20 +38,18 @@ jobs:
     - name: Package
       shell: pwsh
       run: |
-        cp -r 3rd/* build
         windeployqt --no-translations --compiler-runtime build\Release\${env:TARGET_NAME}'.exe'
         cp -r bat/* build/Release
-        cd build
-        mv Release ${env:TARGET_NAME}
-        py7zr c ${env:TARGET_NAME}'.7z' ${env:TARGET_NAME} 
-        cmd /c copy /b 7zsd_All.sfx + config.txt + ${env:TARGET_NAME}'.7z'  ${env:TARGET_NAME}_setup.exe
-        cd ..
+
+    - name: Installer
+      uses: joncloud/makensis-action@v3.7
+
     - name: Release
       if: startsWith(github.event.ref, 'refs/tags/')
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/${{ env.TARGET_NAME }}_setup.exe
+        file: ${{ env.TARGET_NAME }}_setup.exe
         asset_name: ${{ env.TARGET_NAME }}_win_${{ github.ref_name }}.exe
         tag: ${{ github.ref }}
         overwrite: true
